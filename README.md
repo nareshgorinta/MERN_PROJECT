@@ -1,206 +1,411 @@
-# MERNexus — Full-Stack CRUD Admin Dashboard
+# CoreControl - MERN Admin Dashboard
 
-MERNexus is a full-stack admin dashboard built with the MERN stack for managing users, products, and orders from a single interface. The application uses an Express and Mongoose backend to expose REST APIs over MongoDB, while the React frontend provides a polished dashboard for creating, viewing, updating, and deleting records.
+> A production-ready internal administration console built with the MERN stack for managing customers, inventory, and sales orders through a modern dashboard.
 
-## Documentation
+---
 
-- [Backend documentation](backend/README.md)
-- [Frontend documentation](frontend/README.md)
+## 📌 Overview
 
-## Project Overview
+CoreControl is a full-stack MERN application designed to simplify internal business operations from a single interface.
 
-This project demonstrates a practical CRUD workflow for an internal admin system. The frontend is a React + Vite application with Tailwind-based UI components, and the backend is an Express server that connects to MongoDB through Mongoose models. The app currently supports three core resources:
+The platform enables administrators to:
 
-- Users
-- Products
-- Orders
+- Manage customer information
+- Maintain product inventory
+- Create and track sales orders
+- Monitor business statistics in real time
 
-Each resource is managed through dedicated pages that call the backend API and render success, error, loading, and confirmation states.
+The application follows a decoupled client-server architecture where the React frontend communicates with an Express REST API backed by MongoDB Atlas.
 
-## Features
+---
 
-- User CRUD operations from the UI
-- Product CRUD operations from the UI
-- Order CRUD operations from the UI
-- Dashboard summary cards for users, products, and orders
-- Search and filtering for users, products, and orders
-- Product and user selection when creating orders
-- Dynamic order items with quantity and price handling
-- Delete confirmation modals for destructive actions
-- Responsive Tailwind interface with loading and alert states
+# 🚀 Features
 
-## Screenshots
+### Customer Management
 
-Screenshots can be added in the future under the following structure:
+- Create customer accounts
+- View customer details
+- Update customer information
+- Delete customer records
+- Search customers instantly
 
-- ![dashboard](<Screenshot 2026-07-07 142913.png>)
+---
 
-- ![users](image.png)
-- ![products](image-1.png)
-- ![orders](image-2.png)
-- ![create_order](image-3.png)
+### Product Management
 
-> Placeholder paths are included because no screenshot assets are currently stored in the repository.
+- Add new inventory items
+- Edit existing products
+- Delete products
+- Stock management
+- Category support
+- Availability tracking
 
-## Tech Stack
+---
 
-| Layer | Technology |
-| --- | --- |
-| Frontend | React, Vite, Tailwind CSS |
-| Backend | Node.js, Express.js, Mongoose |
-| Database | MongoDB Atlas |
-| Package Management | npm |
-| Version Control | Git, GitHub |
+### Order Management
 
-## Architecture
+- Create customer orders
+- Link customers with products
+- Automatic total price calculation
+- Track order status
+- View complete order history
 
-The frontend communicates with the backend over HTTP/JSON, and the backend routes requests into controllers that operate on Mongoose models before persisting data in MongoDB.
+---
 
-```mermaid
-flowchart LR
-    A[React Frontend] --> B[Express REST API]
-    B --> C[Controllers]
-    C --> D[Mongoose Models]
-    D --> E[MongoDB Atlas]
+### Dashboard
+
+- Total Customers
+- Total Products
+- Total Orders
+- Responsive analytics cards
+
+---
+
+### Additional Features
+
+- Responsive UI
+- Confirmation dialogs before deletion
+- Search functionality
+- RESTful API
+- Modular architecture
+- Reusable React components
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- React.js
+- Vite
+- Tailwind CSS
+- Axios
+- React Router
+
+---
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- dotenv
+- CORS
+
+---
+
+## Database
+
+- MongoDB Atlas
+
+---
+
+## Version Control
+
+- Git
+- GitHub
+
+---
+
+# 🏗 Architecture
+
+```
+React Client
+      │
+      │ HTTP Requests (JSON)
+      ▼
+Express REST API
+      │
+      ▼
+Controllers
+      │
+      ▼
+Mongoose Models
+      │
+      ▼
+MongoDB Atlas
 ```
 
-## Project Structure
+---
 
-```text
-MERN_Project/
+# 📂 Project Structure
+
+```
+Root/
+│
 ├── backend/
 │   ├── src/
+│   │   ├── config/
 │   │   ├── controllers/
-│   │   ├── model/
+│   │   ├── models/
 │   │   ├── routes/
-│   │   └── config/
+│   │   └── middleware/
+│   │
 │   ├── server.js
-│   └── package.json
+│   ├── package.json
+│   └── .env
+│
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
 │   │   ├── pages/
-│   │   └── services/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   └── assets/
+│   │
+│   ├── vite.config.js
 │   ├── package.json
-│   └── vite.config.js
+│   └── .env
+│
+└── README.md
 ```
 
-## Data Model Relationships
+---
 
-The backend uses three Mongoose models:
+# 🗄 Database Schema
 
-- User: stores basic profile information such as name, email, and age.
-- Product: stores product details including name, description, price, category, stock, and availability.
-- Order: stores a user reference, an array of ordered products, a total amount, shipping details, payment details, and status.
+## Customer
 
-Orders link to users and products through MongoDB ObjectId references. The backend order controller uses Mongoose populate calls to resolve the related user and product documents when returning order data.
-
-```mermaid
-erDiagram
-    USER ||--o{ ORDER : places
-    PRODUCT ||--o{ ORDER_ITEM : included_in
-    ORDER ||--|{ ORDER_ITEM : contains
+```javascript
+{
+  name: String,
+  email: String,
+  age: Number
+}
 ```
 
-## Getting Started
+---
 
-### Prerequisites
+## Product
 
-- Node.js and npm installed
-- A MongoDB Atlas cluster (or another MongoDB instance reachable by the backend)
+```javascript
+{
+  name: String,
+  description: String,
+  price: Number,
+  category: String,
+  stock: Number,
+  available: Boolean
+}
+```
 
-### 1. Clone the repository
+---
+
+## Order
+
+```javascript
+{
+  customer: ObjectId,
+  products: [
+    {
+      product: ObjectId,
+      quantity: Number
+    }
+  ],
+  totalPrice: Number,
+  status: String
+}
+```
+
+---
+
+# 🔄 Data Relationships
+
+```
+Customer
+    │
+    │ 1:N
+    ▼
+Orders
+    │
+    │ N:M
+    ▼
+Products
+```
+
+---
+
+# ⚙ Installation
+
+## Clone Repository
 
 ```bash
 git clone https://github.com/srikar2908/mernexus-admin-dashboard.git
 ```
 
-### 2. Backend setup
+---
+
+# Backend Setup
 
 ```bash
 cd backend
+```
+
+Install dependencies
+
+```bash
 npm install
 ```
 
-Create a .env file in the backend directory and set the MongoDB connection URI and the port if needed:
+Create a `.env`
 
 ```env
-MONGODB_URL=your_mongodb_atlas_connection_string
 PORT=3000
+
+MONGODB_URL=your_mongodb_connection_string
 ```
 
-Start the backend:
+Run the server
 
 ```bash
 npm run dev
 ```
 
-### 3. Frontend setup
+---
+
+# Frontend Setup
 
 ```bash
-cd ../frontend
+cd frontend
+```
+
+Install packages
+
+```bash
 npm install
 ```
 
-Create a .env file in the frontend directory if you want to override the default API base URL:
+Create `.env`
 
 ```env
-VITE_API_BASE_URL=http://localhost:5173
+VITE_API_BASE_URL=http://localhost:3000
 ```
 
-Start the frontend:
+Start the client
 
 ```bash
 npm run dev
 ```
 
-## Environment Variables
+---
 
-| Location | Variable | Purpose |
-| --- | --- | --- |
-| Backend | PORT | Express server port |
-| Backend | MONGODB_URL | MongoDB connection string |
-| Frontend | VITE_API_BASE_URL | Base URL for API requests |
+# 📡 REST API
 
-## API Overview
+## Customers
 
 | Method | Endpoint | Description |
-| --- | --- | --- |
-| POST | /users | Create a user |
-| GET | /users | Get all users |
-| GET | /users/:id | Get a user by ID |
-| PUT | /users/:id | Update a user |
-| DELETE | /users/:id | Delete a user |
-| POST | /products | Create a product |
+|---------|----------|-------------|
+| POST | /users | Create customer |
+| GET | /users | Get all customers |
+| GET | /users/:id | Get customer |
+| PUT | /users/:id | Update customer |
+| DELETE | /users/:id | Delete customer |
+
+---
+
+## Products
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /products | Create product |
 | GET | /products | Get all products |
-| GET | /products/:id | Get a product by ID |
-| PUT | /products/:id | Update a product |
-| DELETE | /products/:id | Delete a product |
-| POST | /orders | Create an order |
+| GET | /products/:id | Get product |
+| PUT | /products/:id | Update product |
+| DELETE | /products/:id | Delete product |
+
+---
+
+## Orders
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /orders | Create order |
 | GET | /orders | Get all orders |
-| GET | /orders/:id | Get an order by ID |
-| PUT | /orders/:id | Update an order |
-| DELETE | /orders/:id | Delete an order |
+| GET | /orders/:id | Get order |
+| PUT | /orders/:id | Update order |
+| DELETE | /orders/:id | Delete order |
 
-## CRUD Workflow
+---
 
-The UI exposes CRUD actions through dedicated list, detail, create, and edit views for each resource. The dashboard provides quick access to the main sections, while the management pages include forms, validation feedback, search filters, and delete confirmation dialogs.
+# 🎯 Future Improvements
 
-## Future Improvements
+- JWT Authentication
+- Role-Based Access Control (RBAC)
+- Image Upload Support
+- Pagination
+- Advanced Filtering
+- Search Optimization
+- Order Analytics
+- Dashboard Charts
+- Inventory Alerts
+- Unit Testing
+- Integration Testing
+- GitHub Actions CI/CD
+- Docker Support
+- Deployment on Render/Vercel
 
-Potential future enhancements include:
+---
 
-- Authentication and authorization
-- Pagination and server-side filtering
-- Image uploads for products
-- Inventory transaction handling
-- Automated testing and CI/CD
-- Deployment for both frontend and backend
+# 📸 Screenshots
 
-## Author
+> Add screenshots of your dashboard here.
 
-Srikar Kukkadapu
+```
+Dashboard
 
-## License
+Customers
 
-No license has been specified for this repository yet.
+Products
+
+Orders
+```
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository
+
+2. Create a feature branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Added feature"
+```
+
+4. Push to GitHub
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request
+
+---
+
+# 📜 License
+
+This project is open-source and available under the MIT License.
+
+---
+
+# 👨‍💻 Author
+
+**Naresh Gorinta**
+
+- GitHub: https://github.com/NareshGorinta
+- LinkedIn: *(Add your LinkedIn profile)*
+
+---
+
+## ⭐ If you like this project
+
+Give the repository a **Star ⭐** on GitHub to support the project.
