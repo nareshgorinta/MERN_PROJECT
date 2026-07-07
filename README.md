@@ -401,7 +401,7 @@ This project is open-source and available under the MIT License.
 
 **Naresh Gorinta**
 
-- GitHub: https://github.com/NareshGorinta
+- GitHub: https://github.com/nareshgorinta
 - LinkedIn: *(Add your LinkedIn profile)*
 
 ---
